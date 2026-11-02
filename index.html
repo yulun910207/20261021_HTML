@@ -164,6 +164,8 @@
       border-radius: 14px;
       background: #121926;
     }
+    .feature-switch { grid-template-columns: 1fr 1fr; margin-bottom: 20px; }
+    .feature-switch .mode-option span { padding: 0 8px; text-align: center; }
 
     .mode-option {
       position: relative;
@@ -199,6 +201,30 @@
 
     .mode-content { margin-top: 20px; }
     .mode-content[hidden] { display: none; }
+    .settings-section[hidden], .stage[hidden] { display: none; }
+
+    select {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 14px;
+      border: 1px solid #46536a;
+      border-radius: 11px;
+      color: var(--text);
+      background: #111824;
+      font: inherit;
+      font-size: 16px;
+    }
+
+    .group-help {
+      margin: 0;
+      padding: 14px;
+      border: 1px solid #354258;
+      border-radius: 12px;
+      color: #c1ccdc;
+      background: #141c29;
+      font-size: 14px;
+      line-height: 1.65;
+    }
 
     .range-fields {
       display: grid;
@@ -451,6 +477,111 @@
       background: #252b35;
       animation: wobble .13s linear infinite alternate;
     }
+
+    .group-stage {
+      align-items: flex-start;
+      overflow-y: auto;
+    }
+    .group-results {
+      display: grid;
+      width: 100%;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      align-content: start;
+      gap: 14px;
+    }
+    .group-actions {
+      display: flex;
+      justify-content: center;
+      margin: 0 0 16px;
+    }
+    .group-actions[hidden] { display: none; }
+    .group-card {
+      padding: 16px;
+      border: 1px solid #3d4c62;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #202c3f, #17202e);
+    }
+    .group-card h3 {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 18px;
+    }
+    .group-members {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .group-member {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 9px 10px;
+      border: 1px solid #354156;
+      border-radius: 9px;
+      color: #e8edf5;
+      background: #151d2a;
+      font-size: 16px;
+      overflow-wrap: anywhere;
+    }
+    .group-member.is-leader {
+      border-color: #b99847;
+      color: #fff0bd;
+      background: #3a3220;
+      box-shadow: inset 0 0 0 1px #ffd87924;
+      font-weight: 800;
+    }
+    .gender-badge {
+      flex: 0 0 auto;
+      color: #9eacc0;
+      font-size: 12px;
+    }
+    .leader-badge {
+      flex: 0 0 auto;
+      padding: 3px 7px;
+      border-radius: 999px;
+      color: #35280b;
+      background: var(--gold);
+      font-size: 11px;
+      font-weight: 850;
+    }
+    .leader-button {
+      width: 100%;
+      min-height: 42px;
+      margin-top: 12px;
+      border: 1px solid #5b6b82;
+      border-radius: 10px;
+      color: #e7eef8;
+      background: #273448;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .leader-button:hover { border-color: var(--gold); background: #323c4a; }
+    .leader-button:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+    }
+    .leader-button:disabled { cursor: default; opacity: .8; }
+    .leader-all-button {
+      min-height: 48px;
+      padding: 0 18px;
+      border: 1px solid #b99847;
+      border-radius: 12px;
+      color: #2b220f;
+      background: linear-gradient(115deg, #ffe9a8, #ffd879);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 850;
+    }
+    .leader-all-button:hover { filter: brightness(1.05); }
+    .leader-all-button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
+    }
+    .leader-all-button:disabled { cursor: default; opacity: .7; }
     @keyframes winner-in {
       from { transform: translateY(13px) scale(.8); opacity: 0; }
       to { transform: translateY(0) scale(1); opacity: 1; }
@@ -606,75 +737,118 @@
     <div class="layout">
       <section class="panel settings" aria-labelledby="settings-title">
         <div class="panel-heading">
-          <h2 id="settings-title">抽籤設定</h2>
+          <h2 id="settings-title">活動設定</h2>
           <span class="step-tag">STEP 01</span>
         </div>
 
-        <span class="field-label" id="mode-label">選擇抽籤方式</span>
-        <div class="mode-switch" role="radiogroup" aria-labelledby="mode-label">
+        <span class="field-label" id="feature-label">選擇活動</span>
+        <div class="mode-switch feature-switch" role="radiogroup" aria-labelledby="feature-label">
           <label class="mode-option">
-            <input type="radio" name="mode" value="number" checked>
-            <span>🔢 號碼模式</span>
+            <input type="radio" name="feature" value="lottery" checked>
+            <span>🎯 抽籤</span>
           </label>
           <label class="mode-option">
-            <input type="radio" name="mode" value="name">
-            <span>🧑‍🎓 姓名模式</span>
+            <input type="radio" name="feature" value="groups">
+            <span>👥 隨機分組</span>
           </label>
         </div>
 
-        <div class="mode-content" id="number-mode">
-          <span class="field-label">抽籤範圍</span>
-          <div class="range-fields">
-            <label>
-              <span class="helper">起始號碼</span>
-              <input id="start-number" type="number" min="1" max="100000" step="1" value="1" aria-label="起始號碼">
+        <div class="settings-section" id="lottery-settings">
+          <span class="field-label" id="mode-label">選擇抽籤方式</span>
+          <div class="mode-switch" role="radiogroup" aria-labelledby="mode-label">
+            <label class="mode-option">
+              <input type="radio" name="mode" value="number" checked>
+              <span>🔢 號碼模式</span>
             </label>
-            <span class="range-separator" aria-hidden="true">～</span>
-            <label>
-              <span class="helper">結束號碼</span>
-              <input id="end-number" type="number" min="1" max="100000" step="1" value="30" aria-label="結束號碼">
+            <label class="mode-option">
+              <input type="radio" name="mode" value="name">
+              <span>🧑‍🎓 姓名模式</span>
             </label>
           </div>
-          <p class="helper">包含起始與結束號碼，範圍最多 10 萬個號碼。</p>
-        </div>
 
-        <div class="mode-content" id="name-mode" hidden>
-          <label class="field-label" for="name-list">班級名單</label>
-          <textarea id="name-list" placeholder="每行輸入一位同學&#10;例如：&#10;王小明&#10;陳怡君&#10;林同學" spellcheck="false"></textarea>
-          <p class="helper" id="saved-hint">名單會自動保存在這台裝置的瀏覽器中。</p>
-        </div>
-
-        <div class="divider"></div>
-        <div class="two-fields">
-          <div>
-            <label class="field-label draw-count-label" for="draw-count">一次抽幾位</label>
-            <input class="count-input" id="draw-count" type="number" min="1" max="100000" step="1" value="1">
-            <p class="helper">每次抽出的對象不重複。</p>
+          <div class="mode-content" id="number-mode">
+            <span class="field-label">抽籤範圍</span>
+            <div class="range-fields">
+              <label>
+                <span class="helper">起始號碼</span>
+                <input id="start-number" type="number" min="1" max="100000" step="1" value="1" aria-label="起始號碼">
+              </label>
+              <span class="range-separator" aria-hidden="true">～</span>
+              <label>
+                <span class="helper">結束號碼</span>
+                <input id="end-number" type="number" min="1" max="100000" step="1" value="30" aria-label="結束號碼">
+              </label>
+            </div>
+            <p class="helper">包含起始與結束號碼，範圍最多 10 萬個號碼。</p>
           </div>
-          <div>
-            <label class="field-label" for="exclude-list">排除對象（選填）</label>
-            <textarea class="exclude-textarea" id="exclude-list" placeholder="輸入要略過的號碼或姓名"></textarea>
-            <p class="helper" id="exclude-hint">號碼可用逗號分隔，也支援範圍，例如 5, 12。</p>
+
+          <div class="mode-content" id="name-mode" hidden>
+            <label class="field-label" for="name-list">班級名單</label>
+            <textarea id="name-list" placeholder="每行輸入一位同學&#10;例如：&#10;王小明&#10;陳怡君&#10;林同學" spellcheck="false"></textarea>
+            <p class="helper" id="saved-hint">名單會自動保存在這台裝置的瀏覽器中。</p>
+          </div>
+
+          <div class="divider"></div>
+          <div class="two-fields">
+            <div>
+              <label class="field-label draw-count-label" for="draw-count">一次抽幾位</label>
+              <input class="count-input" id="draw-count" type="number" min="1" max="100000" step="1" value="1">
+              <p class="helper">每次抽出的對象不重複。</p>
+            </div>
+            <div>
+              <label class="field-label" for="exclude-list">排除對象（選填）</label>
+              <textarea class="exclude-textarea" id="exclude-list" placeholder="輸入要略過的號碼或姓名"></textarea>
+              <p class="helper" id="exclude-hint">號碼可用逗號分隔，也支援範圍，例如 5, 12。</p>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="toggle-row">
+            <div class="toggle-copy">
+              <strong>不重複抽籤</strong>
+              <small>開啟後，已抽過的對象不會再次入選。</small>
+            </div>
+            <label class="switch" aria-label="不重複抽籤">
+              <input id="no-repeat" type="checkbox">
+              <span class="switch-track"></span>
+            </label>
+          </div>
+
+          <div class="draw-controls">
+            <button class="draw-button" id="draw-button" type="button">
+              <span class="button-icon" aria-hidden="true">✦</span>
+              <span>開始抽籤</span>
+            </button>
           </div>
         </div>
 
-        <div class="divider"></div>
-        <div class="toggle-row">
-          <div class="toggle-copy">
-            <strong>不重複抽籤</strong>
-            <small>開啟後，已抽過的對象不會再次入選。</small>
-          </div>
-          <label class="switch" aria-label="不重複抽籤">
-            <input id="no-repeat" type="checkbox">
-            <span class="switch-track"></span>
-          </label>
-        </div>
+        <div class="settings-section" id="group-settings" hidden>
+          <label class="field-label" for="group-name-list">班級名單</label>
+          <textarea id="group-name-list" placeholder="每行輸入一位同學&#10;例如：&#10;王小明 (男)&#10;陳怡君 (女)" spellcheck="false"></textarea>
+          <p class="helper">名單會和姓名抽籤模式共用，並自動儲存在這台裝置。</p>
 
-        <div class="draw-controls">
-          <button class="draw-button" id="draw-button" type="button">
-            <span class="button-icon" aria-hidden="true">✦</span>
-            <span>開始抽籤</span>
-          </button>
+          <div class="divider"></div>
+          <label class="field-label" for="group-size">每組人數</label>
+          <input class="count-input" id="group-size" type="number" min="1" max="1000" step="1" value="4">
+          <p class="helper">最後一組人數可能較少；每組人數為上限。</p>
+
+          <div class="divider"></div>
+          <label class="field-label" for="group-strategy">分組方式</label>
+          <select id="group-strategy">
+            <option value="random">純隨機</option>
+            <option value="mixed">男女混合（平均分配）</option>
+            <option value="separated">男女分開</option>
+          </select>
+
+          <div class="divider"></div>
+          <p class="group-help">分組時請在班級名單中每行輸入一位同學。男女分組方式需使用「王小明 (男)」或「陳怡君 (女)」格式；純隨機不需要標示性別。</p>
+
+          <div class="draw-controls">
+            <button class="draw-button" id="make-groups-button" type="button">
+              <span class="button-icon" aria-hidden="true">✦</span>
+              <span>開始隨機分組</span>
+            </button>
+          </div>
         </div>
       </section>
 
@@ -682,23 +856,33 @@
         <div class="result-header">
           <div>
             <h2 id="result-title">抽籤結果</h2>
-            <p>幸運的同學即將揭曉</p>
+            <p id="result-subtitle">幸運的同學即將揭曉</p>
           </div>
           <button class="reset-button" id="reset-button" type="button">↻ 重置紀錄</button>
         </div>
 
-        <div class="stage">
+        <div class="stage" id="lottery-stage">
           <div class="results" id="results" aria-live="polite" aria-atomic="true">
             <div class="placeholder"><span class="placeholder-icon" aria-hidden="true">✧</span>準備好了嗎？<br>按下開始抽籤</div>
           </div>
         </div>
+        <div class="stage group-stage" id="group-stage" hidden>
+          <div style="width: 100%">
+            <div class="group-actions" id="group-actions" hidden>
+              <button class="leader-all-button" id="pick-all-leaders" type="button">✦ 每組各抽一位組長</button>
+            </div>
+            <div class="group-results" id="group-results" aria-live="polite">
+              <div class="placeholder"><span class="placeholder-icon" aria-hidden="true">✧</span>設定組別人數與方式<br>按下開始隨機分組</div>
+            </div>
+          </div>
+        </div>
         <div class="status" id="status" role="status" aria-live="polite"></div>
-        <div class="remaining-row">
+        <div class="remaining-row" id="lottery-remaining">
           <span id="remaining-label">目前可抽人數</span>
           <strong id="remaining-count">30</strong>
         </div>
 
-        <div class="history">
+        <div class="history" id="lottery-history">
           <div class="history-heading">
             <h3>抽籤紀錄</h3>
             <span id="history-count">0 次抽籤</span>
@@ -710,7 +894,7 @@
       </section>
     </div>
 
-    <footer class="page-footer">切換名單或號碼範圍時，已抽狀態會重新開始；抽籤紀錄會保留到重置或關閉頁面。</footer>
+    <footer class="page-footer">抽籤與分組共用同一份姓名名單；名單會儲存在這台裝置的瀏覽器中。</footer>
   </main>
 
   <script>
@@ -722,6 +906,21 @@
       const numberMode = document.getElementById("number-mode");
       const nameMode = document.getElementById("name-mode");
       const nameList = document.getElementById("name-list");
+      const groupNameList = document.getElementById("group-name-list");
+      const lotterySettings = document.getElementById("lottery-settings");
+      const groupSettings = document.getElementById("group-settings");
+      const lotteryStage = document.getElementById("lottery-stage");
+      const groupStage = document.getElementById("group-stage");
+      const lotteryRemaining = document.getElementById("lottery-remaining");
+      const lotteryHistory = document.getElementById("lottery-history");
+      const groupResults = document.getElementById("group-results");
+      const groupActions = document.getElementById("group-actions");
+      const makeGroupsButton = document.getElementById("make-groups-button");
+      const pickAllLeadersButton = document.getElementById("pick-all-leaders");
+      const groupSize = document.getElementById("group-size");
+      const groupStrategy = document.getElementById("group-strategy");
+      const resultTitle = document.getElementById("result-title");
+      const resultSubtitle = document.getElementById("result-subtitle");
       const startNumber = document.getElementById("start-number");
       const endNumber = document.getElementById("end-number");
       const drawCount = document.getElementById("draw-count");
@@ -741,6 +940,7 @@
 
       let drawnIds = new Set();
       let history = [];
+      let groups = [];
       let isDrawing = false;
       let lastPoolSignature = "";
       let audioContext;
@@ -749,8 +949,13 @@
 
       try {
         nameList.value = localStorage.getItem(STORAGE_KEY) || "";
+        groupNameList.value = nameList.value;
       } catch (error) {
         document.getElementById("saved-hint").textContent = "瀏覽器未允許儲存資料，名單只會保留在目前頁面。";
+      }
+
+      function currentFeature() {
+        return document.querySelector('input[name="feature"]:checked').value;
       }
 
       function currentMode() {
@@ -794,6 +999,26 @@
             const occurrence = (occurrences.get(name) || 0) + 1;
             occurrences.set(name, occurrence);
             return { id: `name:${name}:${occurrence}`, label: name, value: name };
+          });
+      }
+
+      function getGroupRoster() {
+        const occurrences = new Map();
+        return groupNameList.value
+          .split(/\r?\n/)
+          .map((line, index) => ({ raw: line.trim(), lineNumber: index + 1 }))
+          .filter(entry => entry.raw)
+          .map(entry => {
+            const tagged = entry.raw.match(/^(.*?)\s*\((男|女)\)\s*$/);
+            const name = tagged ? tagged[1].trim() : entry.raw;
+            if (!name) throw new Error(`第 ${entry.lineNumber} 行缺少姓名。`);
+            const occurrence = (occurrences.get(entry.raw) || 0) + 1;
+            occurrences.set(entry.raw, occurrence);
+            return {
+              id: `group:${entry.raw}:${occurrence}`,
+              name,
+              gender: tagged ? tagged[2] : null
+            };
           });
       }
 
@@ -905,6 +1130,183 @@
         return shuffled.slice(0, count);
       }
 
+      function createGroups(roster, size, strategy) {
+        if (roster.length === 0) throw new Error("請先在班級名單輸入至少一位同學。");
+        if (!Number.isInteger(size) || size < 1 || size > 1000) {
+          throw new Error("每組人數請輸入 1 到 1000 的整數。");
+        }
+
+        if (strategy === "random") {
+          const shuffled = randomSample(roster, roster.length);
+          const result = [];
+          for (let index = 0; index < shuffled.length; index += size) {
+            result.push({
+              title: `第 ${result.length + 1} 組`,
+              members: shuffled.slice(index, index + size),
+              leaderId: null
+            });
+          }
+          return result;
+        }
+
+        const missingGender = roster.find(person => !person.gender);
+        if (missingGender) {
+          throw new Error("男女分組方式需要為每位同學標示性別，例如「王小明 (男)」。");
+        }
+
+        const boysInRoster = roster.filter(person => person.gender === "男");
+        const girlsInRoster = roster.filter(person => person.gender === "女");
+        const boys = randomSample(boysInRoster, boysInRoster.length);
+        const girls = randomSample(girlsInRoster, girlsInRoster.length);
+
+        if (strategy === "separated") {
+          const result = [];
+          for (const [gender, members] of [["男", boys], ["女", girls]]) {
+            for (let index = 0; index < members.length; index += size) {
+              const label = gender === "男" ? "男生" : "女生";
+              result.push({
+                title: `${label}第 ${Math.floor(index / size) + 1} 組`,
+                members: members.slice(index, index + size),
+                leaderId: null
+              });
+            }
+          }
+          return result;
+        }
+
+        if (boys.length === 0 || girls.length === 0) {
+          throw new Error("男女混合分組需要名單中至少各有一位男同學與女同學。");
+        }
+        if (size === 1) {
+          throw new Error("男女混合分組至少需要每組 2 人，請調高每組人數。");
+        }
+
+        const groupCount = Math.ceil(roster.length / size);
+        const baseCapacity = Math.floor(roster.length / groupCount);
+        const extraMembers = roster.length % groupCount;
+        const capacities = Array.from({ length: groupCount }, (_, index) =>
+          baseCapacity + (index < extraMembers ? 1 : 0)
+        );
+        const boyQuotas = capacities.map(capacity => Math.floor(capacity * boys.length / roster.length));
+        let unassignedBoys = boys.length - boyQuotas.reduce((sum, quota) => sum + quota, 0);
+        const quotaOrder = capacities
+          .map((capacity, index) => ({
+            index,
+            remainder: capacity * boys.length / roster.length - boyQuotas[index],
+            tieBreaker: Math.random()
+          }))
+          .sort((left, right) => right.remainder - left.remainder || left.tieBreaker - right.tieBreaker);
+        for (const candidate of quotaOrder) {
+          if (unassignedBoys === 0) break;
+          if (boyQuotas[candidate.index] < capacities[candidate.index]) {
+            boyQuotas[candidate.index] += 1;
+            unassignedBoys -= 1;
+          }
+        }
+
+        let boyIndex = 0;
+        let girlIndex = 0;
+        return capacities.map((capacity, index) => {
+          const boyCount = boyQuotas[index];
+          const members = [
+            ...boys.slice(boyIndex, boyIndex + boyCount),
+            ...girls.slice(girlIndex, girlIndex + capacity - boyCount)
+          ];
+          boyIndex += boyCount;
+          girlIndex += capacity - boyCount;
+          return {
+            title: `第 ${index + 1} 組`,
+            members: randomSample(members, members.length),
+            leaderId: null
+          };
+        });
+      }
+
+      function renderGroups() {
+        groupResults.replaceChildren();
+        if (groups.length === 0) {
+          const placeholder = document.createElement("div");
+          placeholder.className = "placeholder";
+          placeholder.innerHTML = '<span class="placeholder-icon" aria-hidden="true">✧</span>設定組別人數與方式<br>按下開始隨機分組';
+          groupResults.append(placeholder);
+          groupActions.hidden = true;
+          return;
+        }
+
+        groupActions.hidden = false;
+        groups.forEach((group, groupIndex) => {
+          const card = document.createElement("article");
+          card.className = "group-card";
+          const heading = document.createElement("h3");
+          heading.textContent = group.title;
+          const memberList = document.createElement("ul");
+          memberList.className = "group-members";
+
+          for (const member of group.members) {
+            const item = document.createElement("li");
+            item.className = `group-member${member.id === group.leaderId ? " is-leader" : ""}`;
+            const name = document.createElement("span");
+            name.textContent = member.name;
+            item.append(name);
+            if (member.id === group.leaderId) {
+              const badge = document.createElement("span");
+              badge.className = "leader-badge";
+              badge.textContent = "組長";
+              item.append(badge);
+            } else if (member.gender) {
+              const badge = document.createElement("span");
+              badge.className = "gender-badge";
+              badge.textContent = member.gender;
+              item.append(badge);
+            }
+            memberList.append(item);
+          }
+
+          const chooseLeader = document.createElement("button");
+          chooseLeader.className = "leader-button";
+          chooseLeader.type = "button";
+          chooseLeader.textContent = group.leaderId ? "重新抽選組長" : "抽一位組長";
+          chooseLeader.setAttribute("aria-label", `${group.title}抽一位組長`);
+          chooseLeader.addEventListener("click", () => selectGroupLeader(groupIndex));
+          card.append(heading, memberList, chooseLeader);
+          groupResults.append(card);
+        });
+      }
+
+      function selectGroupLeader(groupIndex) {
+        const group = groups[groupIndex];
+        if (!group || group.members.length === 0) return;
+        group.leaderId = randomSample(group.members, 1)[0].id;
+        renderGroups();
+        setStatus(`${group.title}組長已抽出。`);
+      }
+
+      function selectAllGroupLeaders() {
+        if (groups.length === 0) return;
+        for (const group of groups) {
+          group.leaderId = randomSample(group.members, 1)[0].id;
+        }
+        renderGroups();
+        setStatus(`已為 ${groups.length} 組各抽出一位組長。`);
+        playResultSound();
+        launchConfetti();
+      }
+
+      function startGrouping() {
+        if (isDrawing) return;
+        try {
+          const roster = getGroupRoster();
+          groups = createGroups(roster, Number(groupSize.value), groupStrategy.value);
+          renderGroups();
+          const total = groups.reduce((sum, group) => sum + group.members.length, 0);
+          setStatus(`分組完成！共 ${groups.length} 組、${total} 位同學。`);
+          playResultSound();
+          launchConfetti();
+        } catch (error) {
+          setStatus(error.message, true);
+        }
+      }
+
       function playResultSound() {
         const AudioContextConstructor = window.AudioContext || window.webkitAudioContext;
         if (!AudioContextConstructor) return;
@@ -980,7 +1382,7 @@
       function updateMode() {
         const isNumberMode = currentMode() === "number";
         numberMode.hidden = !isNumberMode;
-        nameMode.hidden = isNumberMode;
+        nameMode.hidden = isNumberMode && currentFeature() !== "groups";
         excludeList.placeholder = isNumberMode
           ? "例如：5, 12 或 5-8"
           : "例如：王小明、陳怡君";
@@ -988,11 +1390,29 @@
           ? "號碼可用逗號分隔，也支援範圍，例如 5, 12。"
           : "輸入姓名，可用換行或逗號分隔；同名會一併排除。";
         setStatus("");
-        syncPool();
+        if (currentFeature() === "lottery") syncPool();
+      }
+
+      function updateFeature() {
+        const isGrouping = currentFeature() === "groups";
+        lotterySettings.hidden = isGrouping;
+        groupSettings.hidden = !isGrouping;
+        lotteryStage.hidden = isGrouping;
+        groupStage.hidden = !isGrouping;
+        lotteryRemaining.hidden = isGrouping;
+        lotteryHistory.hidden = isGrouping;
+        resultTitle.textContent = isGrouping ? "分組結果" : "抽籤結果";
+        resultSubtitle.textContent = isGrouping
+          ? "每組名單與組長抽選"
+          : "幸運的同學即將揭曉";
+        resetButton.textContent = isGrouping ? "↻ 重置結果" : "↻ 重置紀錄";
+        nameMode.hidden = currentMode() === "number" && !isGrouping;
+        setStatus("");
+        if (!isGrouping) syncPool();
       }
 
       function updateRemaining() {
-        if (!isDrawing) {
+        if (!isDrawing && currentFeature() === "lottery") {
           const state = syncPool();
           if (state && status.classList.contains("error")) setStatus("");
         }
@@ -1023,7 +1443,7 @@
         isDrawing = true;
         drawButton.disabled = true;
         resetButton.disabled = true;
-        document.querySelectorAll('input[name="mode"], #start-number, #end-number, #name-list, #draw-count, #exclude-list, #no-repeat')
+        document.querySelectorAll('input[name="feature"], input[name="mode"], #start-number, #end-number, #name-list, #draw-count, #exclude-list, #no-repeat')
           .forEach(input => { input.disabled = true; });
         setStatus("抽籤中，請稍候……");
 
@@ -1052,7 +1472,7 @@
           isDrawing = false;
           drawButton.disabled = false;
           resetButton.disabled = false;
-          document.querySelectorAll('input[name="mode"], #start-number, #end-number, #name-list, #draw-count, #exclude-list, #no-repeat')
+          document.querySelectorAll('input[name="feature"], input[name="mode"], #start-number, #end-number, #name-list, #draw-count, #exclude-list, #no-repeat')
             .forEach(input => { input.disabled = false; });
         }, SPIN_DURATION);
       }
@@ -1061,16 +1481,23 @@
         if (isDrawing) return;
         drawnIds.clear();
         history = [];
+        groups = [];
         renderHistory();
         renderResults([]);
         const placeholder = document.createElement("div");
         placeholder.className = "placeholder";
         placeholder.innerHTML = '<span class="placeholder-icon" aria-hidden="true">✧</span>準備好了嗎？<br>按下開始抽籤';
         results.replaceChildren(placeholder);
-        setStatus("抽籤紀錄與不重複狀態已重置。");
-        syncPool();
+        renderGroups();
+        setStatus(currentFeature() === "groups"
+          ? "分組結果與抽籤紀錄已重置。"
+          : "抽籤紀錄與不重複狀態已重置。");
+        if (currentFeature() === "lottery") syncPool();
       }
 
+      document.querySelectorAll('input[name="feature"]').forEach(input => {
+        input.addEventListener("change", updateFeature);
+      });
       document.querySelectorAll('input[name="mode"]').forEach(input => {
         input.addEventListener("change", updateMode);
       });
@@ -1082,16 +1509,56 @@
         if (status.classList.contains("error")) setStatus("");
       });
       nameList.addEventListener("input", () => {
+        groupNameList.value = nameList.value;
         try {
           localStorage.setItem(STORAGE_KEY, nameList.value);
           document.getElementById("saved-hint").textContent = "名單會自動保存在這台裝置的瀏覽器中。";
         } catch (error) {
           document.getElementById("saved-hint").textContent = "瀏覽器未允許儲存資料，名單只會保留在目前頁面。";
         }
+        if (currentFeature() === "groups" && groups.length > 0) {
+          groups = [];
+          renderGroups();
+          setStatus("名單已更新，請重新分組。");
+        }
+      });
+      groupNameList.addEventListener("input", () => {
+        nameList.value = groupNameList.value;
+        let saved = true;
+        try {
+          localStorage.setItem(STORAGE_KEY, groupNameList.value);
+        } catch (error) {
+          saved = false;
+        }
+        if (groups.length > 0) {
+          groups = [];
+          renderGroups();
+        }
+        if (!saved) setStatus("瀏覽器未允許儲存名單；目前頁面仍可繼續使用。", true);
+        else if (currentFeature() === "groups") setStatus("名單已更新，請重新分組。");
+      });
+      [groupSize, groupStrategy].forEach(input => {
+        input.addEventListener("input", () => {
+          if (groups.length > 0) {
+            groups = [];
+            renderGroups();
+            setStatus("分組設定已更新，請重新分組。");
+          }
+        });
+        input.addEventListener("change", () => {
+          if (groups.length > 0) {
+            groups = [];
+            renderGroups();
+            setStatus("分組設定已更新，請重新分組。");
+          }
+        });
       });
       drawButton.addEventListener("click", startDraw);
+      makeGroupsButton.addEventListener("click", startGrouping);
+      pickAllLeadersButton.addEventListener("click", selectAllGroupLeaders);
       resetButton.addEventListener("click", resetDrawing);
 
+      updateFeature();
       lastPoolSignature = `${currentMode()}|${getBasePool().map(person => person.id).join("\u0000")}`;
       renderHistory();
       syncPool();
